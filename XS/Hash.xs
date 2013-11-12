@@ -148,7 +148,7 @@ lazy_accessor(self, ...)
       PUSHMARK(SP);
       XPUSHs(self);
       PUTBACK;
-      if (1 != call_method("_build_foo", G_SCALAR))
+      if (1 != call_method(sprintf("_build_%s", readfrom->key), G_SCALAR))
         croak("Something has gone horribly wrong!");
       SPAGAIN;
       newvalue = POPs;
