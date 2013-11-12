@@ -38,6 +38,7 @@ sub import {
   my $set_subs       = _make_hash($opts{setters} || {});
   my $acc_subs       = _make_hash($opts{accessors} || {});
   my $lvacc_subs     = _make_hash($opts{lvalue_accessors} || {});
+  my $lzacc_subs     = _make_hash($opts{lazy_accessors} || {});
   my $pred_subs      = _make_hash($opts{predicates} || {});
   my $ex_pred_subs   = _make_hash($opts{exists_predicates} || {});
   my $def_pred_subs  = _make_hash($opts{defined_predicates} || {});
@@ -50,6 +51,7 @@ sub import {
                         ["setter", $set_subs],
                         ["accessor", $acc_subs],
                         ["lvalue_accessor", $lvacc_subs],
+                        ["lazy_accessor", $lzacc_subs],
                         ["test", $test_subs],
                         ["ex_predicate", $ex_pred_subs],
                         ["def_predicate", $def_pred_subs],
@@ -88,6 +90,9 @@ sub _generate_method {
   }
   elsif ($type eq 'lvalue_accessor') {
     newxs_lvalue_accessor($subname, $hashkey);
+  }
+  elsif ($type eq 'lazy_accessor') {
+    newxs_lazy_accessor($subname, $hashkey);
   }
   elsif ($type eq 'setter') {
     newxs_setter($subname, $hashkey, $opts->{chained}||0);

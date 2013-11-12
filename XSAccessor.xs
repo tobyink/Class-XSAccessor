@@ -235,6 +235,7 @@ STMT_START {                                                                    
 /* FIXME: redo this to include new names */
 #ifdef VMS
 #define Class__XSAccessor_lvalue_accessor Class_XSAcc_lvacc
+#define Class__XSAccessor_lazy_accessor Class_XSAcc_lzacc
 #define Class__XSAccessor_array_setter Cs_XSAcesor_ary_set
 #define Class__XSAccessor_array_accessor Cs_XSAcesor_ary_accessor
 #define Class__XSAccessor_chained_setter Clas_XSAcesor_chained_seter
@@ -386,6 +387,9 @@ CXAH_GENERATE_ENTERSUB(getter);
 
 XS(CXAH(lvalue_accessor));
 CXAH_GENERATE_ENTERSUB(lvalue_accessor);
+
+XS(CXAH(lazy_accessor));
+CXAH_GENERATE_ENTERSUB(lazy_accessor);
 
 XS(CXAH(setter));
 CXAH_GENERATE_ENTERSUB(setter);

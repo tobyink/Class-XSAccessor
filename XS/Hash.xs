@@ -120,6 +120,46 @@ accessor(self, ...)
     }
 
 void
+lazy_accessor(self, ...)
+    SV* self;
+  INIT:
+    /* Get the const hash key struct from the global storage */
+    const autoxs_hashkey * readfrom = CXAH_GET_HASHKEY;
+    SV** svp;
+  PPCODE:
+    CXA_CHECK_HASH(self);
+    CXAH_OPTIMIZE_ENTERSUB(accessor);
+    if (items > 1) {
+      SV* newvalue = ST(1);
+      if (NULL == hv_store((HV*)SvRV(self), readfrom->key, readfrom->len, newSVsv(newvalue), readfrom->hash))
+        croak("Failed to write new value to hash.");
+      PUSHs(newvalue);
+    }
+    else if ( CXSA_HASH_EXISTS((HV *)SvRV(self), readfrom->key, readfrom->len, readfrom->hash) != NULL ) {
+      if ((svp = CXSA_HASH_FETCH((HV *)SvRV(self), readfrom->key, readfrom->len, readfrom->hash)))
+        PUSHs(*svp);
+      else
+        XSRETURN_UNDEF;
+    }
+    else {
+      SV* newvalue;
+      ENTER;
+      SAVETMPS;
+      PUSHMARK(SP);
+      XPUSHs(self);
+      PUTBACK;
+      if (1 != call_method("_build_foo", G_SCALAR))
+        croak("Something has gone horribly wrong!");
+      SPAGAIN;
+      newvalue = POPs;
+      PUTBACK;
+      FREETMPS;
+      if (NULL == hv_store((HV*)SvRV(self), readfrom->key, readfrom->len, newSVsv(newvalue), readfrom->hash))
+        croak("Failed to write new value to hash.");
+      PUSHs(newvalue);
+    }
+
+void
 chained_accessor(self, ...)
     SV* self;
   INIT:
