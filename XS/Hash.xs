@@ -431,9 +431,9 @@ newxs_setter(namesv, keysv, chained)
     }
     else if (ix == 1) { /* newxs_accessor */
       if (chained)
-        INSTALL_NEW_CV_HASH_OBJ(name, CXAH(chained_setter), key, keylen);
+        INSTALL_NEW_CV_HASH_OBJ(name, CXAH(chained_accessor), key, keylen);
       else
-        INSTALL_NEW_CV_HASH_OBJ(name, CXAH(setter), key, keylen);
+        INSTALL_NEW_CV_HASH_OBJ(name, CXAH(accessor), key, keylen);
     }
     else { /* newxs_lzaccessor */
       if (chained)
